@@ -1,7 +1,6 @@
-use std::{fs::write, io::{Read, Write}, path::PathBuf};
-
-use clap::{Arg, Args, Parser};
-use rsa::{pkcs1::{DecodeRsaPrivateKey, DecodeRsaPublicKey, EncodeRsaPrivateKey, EncodeRsaPublicKey}, pkcs8::{DecodePrivateKey, DecodePublicKey, EncodePrivateKey, LineEnding}, Pkcs1v15Encrypt, RsaPrivateKey, RsaPublicKey};
+use std::{io::{Read, Write}, path::PathBuf};
+use clap::Parser;
+use rsa::{pkcs1::{DecodeRsaPrivateKey, DecodeRsaPublicKey, EncodeRsaPrivateKey, EncodeRsaPublicKey}, pkcs8::{DecodePrivateKey, DecodePublicKey, LineEnding}, Pkcs1v15Encrypt, RsaPrivateKey, RsaPublicKey};
 
 #[derive(clap::Parser)]
 struct Cli {
@@ -10,8 +9,7 @@ struct Cli {
 }
 #[derive(clap::Subcommand, Clone)]
 enum Command {
-    /// Takes a public key and encrypts the provided file with that key, if no file is provided,
-    /// stdin is used
+    /// Takes a public key and encrypts the provided file with that key
     Encrypt{
         #[clap(flatten)]
         group: PubInputGroup,
@@ -24,8 +22,7 @@ enum Command {
         #[arg(short, long, default_value_t = DataFormat::Base64)]
         format: DataFormat,
     },
-    /// Takes a private key and decrypts the provided file with that key, if no file is provided,
-    /// stdin is used
+    /// Takes a private key and decrypts the provided file with that key
     Decrypt{
         #[clap(flatten)]
         group: PrivInputGroup,
@@ -110,8 +107,8 @@ enum KeyFormat {
 impl ToString for KeyFormat {
     fn to_string(&self) -> String {
         match self {
-            KeyFormat::DER => "der",
-            KeyFormat::PEM => "pem",
+            KeyFormat::DER => "DER",
+            KeyFormat::PEM => "PEM",
         }.to_string()
     }
 }
@@ -135,9 +132,7 @@ fn main() {
 
             match format {
                 DataFormat::Base64 => base64::read::DecoderReader::new(reader(group.in_file), &base64::engine::general_purpose::STANDARD).read_to_end(&mut input_file).expect("Failed to decode base64 from stdin"),
-                DataFormat::Raw => 
-                    reader(group.in_file).read_to_end(&mut input_file).expect("Failed to read from stdin")
-                ,
+                DataFormat::Raw => reader(group.in_file).read_to_end(&mut input_file).expect("Failed to read from stdin"),
             };
 
             let decrypted_data = key.decrypt(Pkcs1v15Encrypt, &input_file).expect("Failed to decrypt data");
