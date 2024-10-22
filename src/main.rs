@@ -175,7 +175,7 @@ fn writer(file: Option<PathBuf>) -> Box<dyn Write> {
 }
 fn read_priv<R: std::io::Read>(mut reader: R) -> RsaPrivateKey {
     let mut raw_data = Vec::new();
-    reader.read_to_end(&mut raw_data);
+    reader.read_to_end(&mut raw_data).expect("Failed to read key file/stdin");
     let str_data = String::from_utf8_lossy(&raw_data);
     RsaPrivateKey::from_pkcs8_der(&raw_data).unwrap_or_else(|_| {
         RsaPrivateKey::from_pkcs8_pem(&str_data).unwrap_or_else(|_| {
@@ -187,7 +187,7 @@ fn read_priv<R: std::io::Read>(mut reader: R) -> RsaPrivateKey {
 }
 fn read_pub<R: std::io::Read>(mut reader: R) -> RsaPublicKey {
     let mut raw_data = Vec::new();
-    reader.read_to_end(&mut raw_data);
+    reader.read_to_end(&mut raw_data).expect("Failed to read key file/stdin");
     let str_data = String::from_utf8_lossy(&raw_data);
     RsaPublicKey::from_pkcs1_der(&raw_data).unwrap_or_else(|_| {
         RsaPublicKey::from_pkcs1_pem(&str_data).unwrap_or_else(|_| {
