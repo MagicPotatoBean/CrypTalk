@@ -107,8 +107,8 @@ enum KeyFormat {
 impl ToString for KeyFormat {
     fn to_string(&self) -> String {
         match self {
-            KeyFormat::DER => "DER",
-            KeyFormat::PEM => "PEM",
+            KeyFormat::DER => "der",
+            KeyFormat::PEM => "pem",
         }.to_string()
     }
 }
