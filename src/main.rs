@@ -134,8 +134,8 @@ fn main() {
                 DataFormat::Base64 => base64::read::DecoderReader::new(reader(group.in_file), &base64::engine::general_purpose::STANDARD).read_to_end(&mut input_file).expect("Failed to decode base64 from stdin"),
                 DataFormat::Raw => reader(group.in_file).read_to_end(&mut input_file).expect("Failed to read from stdin"),
             };
-
-            let decrypted_data = key.decrypt(Pkcs1v15Encrypt, &input_file).expect("Failed to decrypt data");
+            
+            let decrypted_data = key.decrypt(Pkcs1v15Encrypt, &input_file.trim_ascii()).expect("Failed to decrypt data");
             writer(out_file).write_all(&decrypted_data).expect("Failed to write to file/stdout");
         },
         Command::GeneratePub { in_file, out_file, format } => {
