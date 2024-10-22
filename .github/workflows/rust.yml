@@ -10,7 +10,7 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  build-server-ubuntu:
+  build-cryptalk-ubuntu:
 
     runs-on: ubuntu-20.04
 
@@ -24,7 +24,7 @@ jobs:
         name: cryptalk
         path: target/release/cryptalk
 
-  build-server-windows:
+  build-cryptalk-windows:
 
     runs-on: windows-latest
 

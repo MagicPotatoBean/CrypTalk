@@ -7,3 +7,4 @@ edition = "2021"
 rsa = "0.9.6"
 rand = "0.8.5"
 clap = { version = "4.5.20", features = ["derive"] }
+base64 = "0.22.1"
